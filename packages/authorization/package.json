@@ -1,0 +1,47 @@
+{
+  "name": "@loopback/authorization",
+  "version": "0.1.0",
+  "description": "A LoopBack component for authorization support.",
+  "engines": {
+    "node": ">=8"
+  },
+  "scripts": {
+    "acceptance": "lb-mocha \"DIST/test/acceptance/**/*.js\"",
+    "build": "lb-tsc es2017",
+    "build:apidocs": "lb-apidocs",
+    "clean": "lb-clean loopback-authorization*.tgz dist package api-docs",
+    "integration": "lb-mocha \"DIST/test/integration/**/*.js\"",
+    "prepublishOnly": "npm run build && npm run build:apidocs",
+    "pretest": "npm run build",
+    "test": "lb-mocha \"DIST/test/unit/**/*.js\" \"DIST/test/integration/**/*.js\" \"DIST/test/acceptance/**/*.js\"",
+    "unit": "lb-mocha \"DIST/test/unit/**/*.js\"",
+    "verify": "npm pack && tar xf loopback-authorization*.tgz && tree package && npm run clean"
+  },
+  "author": "IBM",
+  "copyright.owner": "IBM Corp.",
+  "license": "MIT",
+  "dependencies": {
+    "@loopback/context": "^0.5.3",
+    "@loopback/core": "^0.4.3"
+  },
+  "devDependencies": {
+    "@loopback/build": "^0.4.2",
+    "@loopback/testlab": "^0.5.3"
+  },
+  "keywords": [
+    "LoopBack",
+    "Authorization"
+  ],
+  "files": [
+    "README.md",
+    "index.js",
+    "index.d.ts",
+    "dist/src",
+    "api-docs",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/strongloop/loopback-next.git"
+  }
+}
