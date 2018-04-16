@@ -41,16 +41,36 @@ describe('Binding', () => {
   describe('tag', () => {
     it('tags the binding', () => {
       binding.tag('t1');
-      expect(binding.tags.has('t1')).to.be.true();
+      expect(binding.tagNames).to.eql(['t1']);
       binding.tag('t2');
-      expect(binding.tags.has('t1')).to.be.true();
-      expect(binding.tags.has('t2')).to.be.true();
+      expect(binding.tagNames).to.eql(['t1', 't2']);
+      expect(binding.tagMap).to.eql({t1: 't1', t2: 't2'});
     });
 
     it('tags the binding with an array', () => {
       binding.tag(['t1', 't2']);
-      expect(binding.tags.has('t1')).to.be.true();
-      expect(binding.tags.has('t2')).to.be.true();
+      expect(binding.tagNames).to.eql(['t1', 't2']);
+    });
+
+    it('tags the binding with rest args', () => {
+      binding.tag('t1', 't2');
+      expect(binding.tagNames).to.eql(['t1', 't2']);
+    });
+
+    it('tags the binding with name/value', () => {
+      binding.tag({name: 'my-controller'});
+      expect(binding.tagNames).to.eql(['name']);
+      expect(binding.tagMap).to.eql({name: 'my-controller'});
+    });
+
+    it('tags the binding with names and name/value objects', () => {
+      binding.tag('controller', {name: 'my-controller'}, 'rest');
+      expect(binding.tagNames).to.eql(['controller', 'name', 'rest']);
+      expect(binding.tagMap).to.eql({
+        controller: 'controller',
+        name: 'my-controller',
+        rest: 'rest',
+      });
     });
   });
 
@@ -158,7 +178,7 @@ describe('Binding', () => {
       expect(json).to.eql({
         key: key,
         scope: BindingScope.TRANSIENT,
-        tags: [],
+        tags: {},
         isLocked: false,
       });
     });
@@ -166,13 +186,13 @@ describe('Binding', () => {
     it('converts a binding with more attributes to plain JSON object', () => {
       const myBinding = new Binding(key, true)
         .inScope(BindingScope.CONTEXT)
-        .tag('model')
+        .tag('model', {name: 'my-model'})
         .to('a');
       const json = myBinding.toJSON();
       expect(json).to.eql({
         key: key,
         scope: BindingScope.CONTEXT,
-        tags: ['model'],
+        tags: {model: 'model', name: 'my-model'},
         isLocked: true,
         type: BindingType.CONSTANT,
       });
