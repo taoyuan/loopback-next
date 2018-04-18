@@ -12,13 +12,12 @@ import {
   DefaultCrudRepository,
   DataSourceType,
 } from '../../../../../src/repositories';
-import {DefaultHasManyEntityCrudRepository} from '../../../../../src/repositories/relation.repository';
 
-export class CustomerRepository extends DefaultHasManyEntityCrudRepository<
-  Order,
+export class CustomerRepository extends DefaultCrudRepository<
+  Customer,
   typeof Customer.prototype.id
 > {
-  constructor() {
-    super(OrderRepository.prototype, Customer.prototype.getId());
+  constructor(protected datasource: DataSourceType) {
+    super(Customer, datasource);
   }
 }
