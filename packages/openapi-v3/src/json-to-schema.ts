@@ -5,9 +5,10 @@
 
 import {JsonDefinition} from '@loopback/repository-json-schema';
 import {SchemaObject, ExtensionValue} from '@loopback/openapi-v3-types';
+import {JSONSchema6} from 'json-schema';
 import * as _ from 'lodash';
 
-export function jsonToSchemaObject(jsonDef: JsonDefinition): SchemaObject {
+export function jsonToSchemaObject(jsonDef: JSONSchema6): SchemaObject {
   const json = jsonDef as {[name: string]: ExtensionValue}; // gets around index signature error
   const result: SchemaObject = {};
   const propsToIgnore = [
@@ -50,14 +51,14 @@ export function jsonToSchemaObject(jsonDef: JsonDefinition): SchemaObject {
       case 'additionalProperties': {
         if (typeof json.additionalProperties !== 'boolean') {
           result.additionalProperties = jsonToSchemaObject(
-            json.additionalProperties as JsonDefinition,
+            json.additionalProperties as JSONSchema6,
           );
         }
         break;
       }
       case 'items': {
         const items = Array.isArray(json.items) ? json.items[0] : json.items;
-        result.items = jsonToSchemaObject(items as JsonDefinition);
+        result.items = jsonToSchemaObject(items as JSONSchema6);
         break;
       }
       case 'enum': {
@@ -68,7 +69,7 @@ export function jsonToSchemaObject(jsonDef: JsonDefinition): SchemaObject {
             newEnum.push(element);
           } else {
             // if element is JsonDefinition, convert to SchemaObject
-            newEnum.push(jsonToSchemaObject(element as JsonDefinition));
+            newEnum.push(jsonToSchemaObject(element as JSONSchema6));
           }
         }
         result.enum = newEnum;
